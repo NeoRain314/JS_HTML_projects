@@ -96,10 +96,8 @@
         <br />
         <br />
         
-        <form>
-          <input type="checkbox" name="clanAction" value="option-1" /> call Clan Meeting <br />
-          <input type="checkbox" name="clanAction" value="option-2" /> option 2 <br />
-          <input type="checkbox" name="clanAction" value="option-3" /> Option 3<br />
+        <form id="clanActionForm">
+          <!-- <input type="checkbox" name="clanAction" value="option-1" /> call Clan Meeting <br /> -->  
         </form>
       </div>
 <!------------------------------>      
@@ -138,10 +136,14 @@
 
       // ------------------------ ''create functions'' ----------------------------------------- //
 
-      function createClan() {
+      function createClan() { // inizialisiere Game
         for (i = 0; i < 5; i++) {
           allCats.push(createCat());
         }
+        createClanAction("huntingPatrol", "Hunting Patrol");
+        createClanAction("borderPatrol", "Border Patrol");
+        createClanAction("herbPatrol", "Herb Patrol");
+        console.log(allClanActions);
         return allCats;
       }
 
@@ -159,7 +161,7 @@
         cat.suffix = getRandomElement(CAT_SUFFIX);
         updateCatRankAndNames(cat);
 
-        
+
           
         cat.getName = function () {
           return this.präfix + this.suffix ;
@@ -184,11 +186,44 @@
         };
         div.appendChild(button);
       }
+      
+      let allClanActions = {};
+
+      function createClanAction(checkboxValue, checkboxText){
+        let a = {};
+        a.checkboxValue = checkboxValue;
+        a.checkboxText = checkboxText;
+
+        { 
+          //create Checkbox
+          var form = document.getElementById("clanActionForm");
+          var checkbox = document.createElement("input"); // create checkBox
+          //set properties
+          checkbox.className = "checkbox";
+          checkbox.type = "checkbox";
+          checkbox.name = "clanAction";
+          checkbox.value = checkboxValue;
+          checkbox.checked = false;
+          checkbox.id = checkboxValue;
+
+          var label = document.createElement('label');
+          label.htmlFor = checkboxValue; //id
+
+          label.appendChild(document.createTextNode(checkboxText));
+    
+          form.appendChild(checkbox); // add checkbox to form
+          form.appendChild(label); // add the text
+          form.appendChild(document.createElement("br")); //new line
+        }
+
+        allClanActions[checkboxValue] = a;
+      }
 
       // ------------------------ '' Functions '' ----------------------------------------- //
 
       function computeNextDay() {
         clanTurns = allCats.length *3;
+        getChecked("clanAction");
       }
       
       function showCatInfos(cat) {
@@ -198,6 +233,8 @@
       }
 
       function endDay() {
+        computeNextDay();
+
       //count days up
         days++;
         console.log(days);
@@ -265,6 +302,21 @@
           }
         
           
+      }
+
+
+
+      function getChecked(name) { //gets the checked boxes of one name
+        var options = document.getElementsByName(name); 
+        var checkedOptions = []; 
+
+        for (var i = 0; i < options.length; i++) {
+          if (options[i].checked) {
+            checkedOptions.push(options[i].value);
+          }
+        }
+
+        console.log(checkedOptions);
       }
         
       // ------------------------ '' Game '' ----------------------------------------- //
