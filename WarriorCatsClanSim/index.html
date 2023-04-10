@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Warrior Cats Clan Sim</title>
+    <meta charset="utf-8" />
+    <style>
+      .normButton {
+        display: inline-block;
+        border: 2px solid #1e944b;
+        border-radius: 4px;
+        background-color: #a2e0a7;
+        color: #1e944b;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .normButton:hover {
+        background-color: #81b385;
+        cursor: pointer;
+      }
+
+      .catButtons {
+        display: inline-block;
+        padding: 12px 32px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #fff;
+        background-color: #4c9ef1;
+        background-image: linear-gradient(to bottom, #5fb881, #1e944b);
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .catButtons:hover {
+        transform: translateY(5px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .catButtons:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(27, 77, 31, 0.4);
+      }
+
+      h1 {
+        font-size: 48px;
+        font-weight: bold;
+        text-align: center;
+        color: #1e944b;
+        text-shadow: 3px 3px 0 rgba(133, 201, 139, 0.5);
+      }
+
+      #left-div {
+        float: left;
+        width: 65%;
+      }
+
+      #right-div {
+        float: right;
+        width: 30%;
+      }
+
+      .container {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Warrior Cats Clan Sim</h1>
+
+    <div class="container">
+<!------------------------------>
+      <div id="left-div">
+        <br />
+        <div id="catButtons"> </div>
+        <br />
+          <div>
+            <p id="catInfoBox"> </p>
+          </div>
+      </div>
+<!------------------------------>
+      <div id="right-div">
+        <p id="day"> Day: 0</p>
+        <br />
+        <button class="normButton" onclick="endDay()">End Day</button>
+        <br />
+        <br />
+        
+        <form>
+          <input type="checkbox" name="clanAction" value="option-1" /> call Clan Meeting <br />
+          <input type="checkbox" name="clanAction" value="option-2" /> option 2 <br />
+          <input type="checkbox" name="clanAction" value="option-3" /> Option 3<br />
+        </form>
+      </div>
+<!------------------------------>      
+    </div>
+
+    <script>
+      // ------------------------ ''variables'' ----------------------------------------- //
+      const CAT_RANKS = {
+        LEADER: "Leader",
+        DEPUTY: "Deputy",
+        MEDECINE_CAT: "Medecine Cat",
+        WARRIOR: "Warrior",
+        APPRENTICE: "Apprentice",
+        KIT: "Kit",
+        ELDER: "Elder",
+      };
+      
+      const CAT_PRAEFIX = [
+        "Oak",
+        "Night",
+        "Brown",
+        "Silver",
+        "Ivy",
+      ]
+      
+      const CAT_SUFFIX = [
+        "fur",
+        "tail",
+        "pelt",
+        "storm",
+        "fall",
+      ]
+
+      let allCats = [];
+      let days = 0;
+
+      // ------------------------ ''create functions'' ----------------------------------------- //
+
+      function createClan() {
+        for (i = 0; i < 5; i++) {
+          allCats.push(createCat());
+        }
+        return allCats;
+      }
+
+      function createCat() {
+        let cat = {
+          präfix: "präfix",
+          suffix: "suffix",
+          furColor: 1, // images which have numbers
+          daysOld: 0, // age in days
+          rank: "no rank",
+        };
+        
+        cat.daysOld = getRandomNumber(1000);
+        cat.präfix = getRandomElement(CAT_PRAEFIX);
+        cat.suffix = getRandomElement(CAT_SUFFIX);
+        updateCatRankAndNames(cat);
+
+        
+          
+        cat.getName = function () {
+          return this.präfix + this.suffix ;
+        };
+        return cat;
+      }
+
+      function createUI() {
+        for (i = 0; i < allCats.length; i++) {
+          createCatButton(allCats[i]);
+        }
+      }
+
+      function createCatButton(cat) {
+        var div = document.getElementById("catButtons");
+        var button = document.createElement("button"); // create button
+        button.textContent = cat.getName(); // text on buttone = cat name
+        //button.id = "my-button";
+        button.className = "catButtons";
+        button.onclick = function () {
+          showCatInfos(cat);
+        };
+        div.appendChild(button);
+      }
+
+      // ------------------------ '' Functions '' ----------------------------------------- //
+
+      function computeNextDay() {
+        clanTurns = allCats.length *3;
+      }
+      
+      function showCatInfos(cat) {
+        console.log(cat.getName());
+        let p = document.getElementById("catInfoBox");
+        p.innerHTML = cat.getName() + "<br/>" + computeMoons(cat.daysOld) + " moons" + "<br/> "+ cat.rank;
+      }
+
+      function endDay() {
+      //count days up
+        days++;
+        console.log(days);
+        let p = document.getElementById("day")
+        p.innerHTML = "Day: " + days
+        
+      //unselect all options
+        let checkboxes = document.getElementsByName("clanAction");
+        for(var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = false;
+        }
+      //clear cat info box
+        let p2 = document.getElementById("catInfoBox");
+        p2.innerHTML ="";
+        
+      //make all cats one day older and update rank and name
+        for(let i = 0; i < allCats.length; i++) {
+          let cat = allCats[i];
+          cat.daysOld+= 1; //change age
+          updateCatRankAndNames(cat); // update rank and name by age
+        }
+      
+        
+      }
+      
+      function getRandomElement(array){
+        let e = array[getRandomNumber(array.length)];
+        return e;
+      }
+      
+      function computeMoons(days){
+        let m = days/30;
+        return Math.floor(m);
+      }
+      
+      function getRandomNumber(max){
+        let r = Math.random() * max;
+        return Math.floor(r);
+      }
+      
+      function updateCatRankAndNames(cat){
+          
+          //update rank
+          if(computeMoons(cat.daysOld) < 6) {
+            cat.rank = CAT_RANKS.KIT; //kit
+          } else if(computeMoons(cat.daysOld) < 12){
+            cat.rank = CAT_RANKS.APPRENTICE; //apprentice
+          } else if(computeMoons(cat.daysOld) < 80){
+            if(cat.rank != CAT_RANKS.LEADER && cat.rank != CAT_RANKS.DEPUTY && cat.rank != CAT_RANKS.MEDECINE_CAT) {
+              cat.rank = CAT_RANKS.WARRIOR; //warrior if not lead, dep or med
+            }
+          } else {
+            cat.rank = CAT_RANKS.ELDER;
+          }
+          
+          //update suffix
+          if(cat.rank == CAT_RANKS.KIT) {
+            cat.suffix = "kit";
+          } else if(cat.rank == CAT_RANKS.APPRENTICE){
+            cat.suffix = "paw";
+          }else if(cat.rank == CAT_RANKS.LEADER){
+            cat.suffix = "star";
+          }else {
+            cat.suffix = getRandomElement(CAT_SUFFIX);
+          }
+        
+          
+      }
+        
+      // ------------------------ '' Game '' ----------------------------------------- //
+
+      console.log(createClan());
+      createUI();
+    </script>
+  </body>
+</html>
+
+
