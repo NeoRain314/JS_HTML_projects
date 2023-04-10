@@ -1,0 +1,7 @@
+git befehle:
+
+git status
+git pull origin //von github runterladen
+git commit -a -m "my comment" //änderungen speichern
+git push origin //davor commit damit änderungen in git gespeichert; auf github hochladen
+git add dateiname.blub
