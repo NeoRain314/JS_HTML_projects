@@ -154,25 +154,26 @@
           furColor: 1, // images which have numbers
           daysOld: 0, // age in days
           rank: "no rank",
+          catButton: null,
         };
         
         cat.daysOld = getRandomNumber(1000);
         cat.präfix = getRandomElement(CAT_PRAEFIX);
-        cat.suffix = getRandomElement(CAT_SUFFIX);
-        updateCatRankAndNames(cat);
+        cat.suffix = getRandomElement(CAT_SUFFIX); 
 
-
-          
         cat.getName = function () {
           return this.präfix + this.suffix ;
         };
+        createCatButton(cat);
+        updateCatRankAndNames(cat);
         return cat;
       }
 
       function createUI() {
-        for (i = 0; i < allCats.length; i++) {
-          createCatButton(allCats[i]);
-        }
+        // I do this in createCat();
+        // for (i = 0; i < allCats.length; i++) {
+        //   createCatButton(allCats[i]);
+        // }
       }
 
       function createCatButton(cat) {
@@ -185,6 +186,7 @@
           showCatInfos(cat);
         };
         div.appendChild(button);
+        cat.catButton = button;
       }
       
       let allClanActions = {};
@@ -250,11 +252,11 @@
         let p2 = document.getElementById("catInfoBox");
         p2.innerHTML ="";
         
-      //make all cats one day older and update rank and name
+      //update cats
         for(let i = 0; i < allCats.length; i++) {
           let cat = allCats[i];
           cat.daysOld+= 1; //change age
-          updateCatRankAndNames(cat); // update rank and name by age
+          updateCatRankAndNames(cat); // update rank and name by age and also button
         }
       
         
@@ -300,7 +302,9 @@
           }else {
             cat.suffix = getRandomElement(CAT_SUFFIX);
           }
-        
+          
+          //update cat button
+          cat.catButton.textContent = cat.getName(); // update name on button
           
       }
 
