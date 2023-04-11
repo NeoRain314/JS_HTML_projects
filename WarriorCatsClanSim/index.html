@@ -69,6 +69,15 @@
         width: 30%;
       }
 
+      #bottom-div {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 20%;
+        border: 2px solid rgb(184, 184, 184);
+        overflow: auto;
+      }
+
       .container {
         overflow: hidden;
       }
@@ -79,7 +88,7 @@
     <h1>Warrior Cats Clan Sim</h1>
 
     <div class="container">
-<!------------------------------>
+<!---------------------------- div left --> 
       <div id="left-div">
         <br />
         <div id="catButtons"> </div>
@@ -88,7 +97,7 @@
             <p id="catInfoBox"> </p>
           </div>
       </div>
-<!------------------------------>
+<!---------------------------- div right -->
       <div id="right-div">
         <p id="day"> Day: 0</p>
         <br />
@@ -100,7 +109,10 @@
           <!-- <input type="checkbox" name="clanAction" value="option-1" /> call Clan Meeting <br /> -->  
         </form>
       </div>
-<!------------------------------>      
+<!---------------------------- div bottom -->     
+      <div id="bottom-div">
+      </div>
+<!------------------------------>  
     </div>
 
     <script>
@@ -134,19 +146,33 @@
       let allCats = [];
       let days = 0;
 
+      // ------------------------ ''action functions'' ----------------------------------------- //
+
+      function execute_huntingPatrol(a){
+        log("Your cats were on a successful hunting patrol!")
+      }
+
+      function execute_borderPatrol(a){
+        log("Your cats were on a successful border patrol!")
+      }
+
+      function execute_herbPatrol(a){
+        log("Your medecine cat found some herbs!")
+      }
+      
       // ------------------------ ''create functions'' ----------------------------------------- //
 
       function createClan() { // inizialisiere Game
         for (i = 0; i < 5; i++) {
           allCats.push(createCat());
         }
-        createClanAction("huntingPatrol", "Hunting Patrol");
-        createClanAction("borderPatrol", "Border Patrol");
-        createClanAction("herbPatrol", "Herb Patrol");
+        createClanAction("huntingPatrol", "Hunting Patrol", 1, execute_huntingPatrol);
+        createClanAction("borderPatrol", "Border Patrol", 2, execute_borderPatrol);
+        createClanAction("herbPatrol", "Herb Patrol", 3, execute_herbPatrol);
         console.log(allClanActions);
         return allCats;
       }
-
+      
       function createCat() {
         let cat = {
           präfix: "präfix",
@@ -170,7 +196,8 @@
       }
 
       function createUI() {
-        // I do this in createCat();
+        log("Your History Log:");
+        // I do cat buttons in createCat();
         // for (i = 0; i < allCats.length; i++) {
         //   createCatButton(allCats[i]);
         // }
@@ -191,10 +218,12 @@
       
       let allClanActions = {};
 
-      function createClanAction(checkboxValue, checkboxText){
+      function createClanAction(checkboxValue, checkboxText, turnCosts, actionFunction){
         let a = {};
         a.checkboxValue = checkboxValue;
         a.checkboxText = checkboxText;
+        a.turnCosts = turnCosts;
+        a.execute = actionFunction;
 
         { 
           //create Checkbox
@@ -223,9 +252,26 @@
 
       // ------------------------ '' Functions '' ----------------------------------------- //
 
+      function log(text) {
+        let div = document.getElementById("bottom-div");
+        div.innerHTML = div.innerHTML + "<br/>" + text;
+        div.scrollTop = div.scrollHeight;
+      }
+      
+      function computeActionPoints(){
+        let usedP = 0;
+        let checkedOptions = getChecked("clanAction");
+        for(i=0; i<checkedOptions.length; i++){
+          let a = allClanActions[checkedOptions[i]];
+          a.execute(a);
+          usedP += a.turnCosts;
+        }
+        console.log(usedP);
+      }
+
       function computeNextDay() {
         clanTurns = allCats.length *3;
-        getChecked("clanAction");
+        console.log(getChecked("clanAction")); //get all checked options
       }
       
       function showCatInfos(cat) {
@@ -235,11 +281,12 @@
       }
 
       function endDay() {
+        log("---------------------------------------")
         computeNextDay();
-
+        computeActionPoints();
       //count days up
         days++;
-        console.log(days);
+        //console.log(days);
         let p = document.getElementById("day")
         p.innerHTML = "Day: " + days
         
@@ -320,7 +367,7 @@
           }
         }
 
-        console.log(checkedOptions);
+        return checkedOptions;
       }
         
       // ------------------------ '' Game '' ----------------------------------------- //
