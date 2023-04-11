@@ -93,9 +93,10 @@
         <br />
         <div id="catButtons"> </div>
         <br />
-          <div>
-            <p id="catInfoBox"> </p>
-          </div>
+        <div>
+          <p id="catInfoBox"> </p>
+        </div>
+        <div id="clanStatus"></div>
       </div>
 <!---------------------------- div right -->
       <div id="right-div">
@@ -145,11 +146,26 @@
 
       let allCats = [];
       let days = 0;
+      let allClanActions = {};
+
+      let clan = {
+        usableActionPoints : 0,
+        maxPrey: 20,
+        prey: 0,
+        maxHerbs: 10,
+        herbs:0,
+      }
 
       // ------------------------ ''action functions'' ----------------------------------------- //
 
       function execute_huntingPatrol(a){
-        log("Your cats were on a successful hunting patrol!")
+        let huntedPrey = getRandomNumber(10);
+        clan.prey += huntedPrey;
+        //if the storage isn't big enought, just "delete" the overflow
+        if(clan.prey > clan.maxPrey) { 
+          clan.prey = clan.maxPrey
+        }
+        log("Your cats were on a successful hunting patrol!" + "(" + huntedPrey + " pieces of prey)")
       }
 
       function execute_borderPatrol(a){
@@ -195,8 +211,11 @@
         return cat;
       }
 
-      function createUI() {
+      function createGame() {
         log("Your History Log:");
+        clan.prey = clan.maxPrey;
+        clan.herbs = clan.maxHerbs;
+        updateClanStatus();
         // I do cat buttons in createCat();
         // for (i = 0; i < allCats.length; i++) {
         //   createCatButton(allCats[i]);
@@ -216,7 +235,7 @@
         cat.catButton = button;
       }
       
-      let allClanActions = {};
+      
 
       function createClanAction(checkboxValue, checkboxText, turnCosts, actionFunction){
         let a = {};
@@ -258,35 +277,69 @@
         div.scrollTop = div.scrollHeight;
       }
       
+      function updateClanStatus() {
+        let div = document.getElementById("clanStatus");
+
+        //write down all clan stats  --> (set in endDay())
+        div.innerHTML = "Prey: " + clan.prey + "/" + clan.maxPrey
+      }
+
+
       function computeActionPoints(){
         let usedP = 0;
         let checkedOptions = getChecked("clanAction");
         for(i=0; i<checkedOptions.length; i++){
           let a = allClanActions[checkedOptions[i]];
-          a.execute(a);
           usedP += a.turnCosts;
         }
         console.log(usedP);
+        return (usedP <= clan.usableActionPoints)
       }
 
-      function computeNextDay() {
-        clanTurns = allCats.length *3;
-        console.log(getChecked("clanAction")); //get all checked options
-      }
-      
+  
       function showCatInfos(cat) {
         console.log(cat.getName());
         let p = document.getElementById("catInfoBox");
         p.innerHTML = cat.getName() + "<br/>" + computeMoons(cat.daysOld) + " moons" + "<br/> "+ cat.rank;
       }
 
+      function computeNextDay() {
+        //update all clan stats
+         clan.prey -= allCats.length;
+
+        //update cats
+         for(let i = 0; i < allCats.length; i++) {
+            let cat = allCats[i];
+            cat.daysOld+= 1; //change age
+            updateCatRankAndNames(cat); // update rank and name by age and also button
+         }
+
+         
+
+        //update clan status
+         updateClanStatus();
+
+        
+      }
+
       function endDay() {
+        clan.usableActionPoints = allCats.length*2;
+
+        //computes the action points with the current selection and then returns if it works or not
+        if (!computeActionPoints()) {
+          log("!!! you have not enought action points to do all the selected options! You have " + clan.usableActionPoints + " actionpoints to use. !!!");
+          return;
+        }
+
         log("---------------------------------------")
+        
         computeNextDay();
-        computeActionPoints();
+      
+//new function with a.execute(a), to call the action functions!!!!!!!!!!!!!
+        
+      
       //count days up
         days++;
-        //console.log(days);
         let p = document.getElementById("day")
         p.innerHTML = "Day: " + days
         
@@ -295,18 +348,16 @@
         for(var i = 0; i < checkboxes.length; i++) {
           checkboxes[i].checked = false;
         }
+
       //clear cat info box
         let p2 = document.getElementById("catInfoBox");
         p2.innerHTML ="";
         
-      //update cats
-        for(let i = 0; i < allCats.length; i++) {
-          let cat = allCats[i];
-          cat.daysOld+= 1; //change age
-          updateCatRankAndNames(cat); // update rank and name by age and also button
-        }
       
-        
+      
+      
+
+
       }
       
       function getRandomElement(array){
@@ -373,7 +424,7 @@
       // ------------------------ '' Game '' ----------------------------------------- //
 
       console.log(createClan());
-      createUI();
+      createGame();
     </script>
   </body>
 </html>
