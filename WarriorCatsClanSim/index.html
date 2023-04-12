@@ -4,6 +4,19 @@
     <title>Warrior Cats Clan Sim</title>
     <meta charset="utf-8" />
     <style>
+
+      body {
+        background-color: #c2f1c6;
+      }
+
+      hr {
+        color: #ccc;
+        height: 1px;
+        border: none;
+        background-color: #ccc;
+        margin: 20px 0;
+      }
+
       .normButton {
         display: inline-block;
         border: 2px solid #1e944b;
@@ -62,20 +75,29 @@
       #left-div {
         float: left;
         width: 65%;
+        
+        background-color: #5fb88144;
+        border: 2px solid #1e944b18;
+        padding: 0.5%;
       }
 
       #right-div {
         float: right;
         width: 30%;
+        border: 2px solid #1e944b18;
+        
+        padding: 0.5%;
       }
 
-      #bottom-div {
+      #log-div {
         position: absolute;
         bottom: 0;
-        width: 100%;
+        width: 65%;
         height: 20%;
-        border: 2px solid rgb(184, 184, 184);
+        border: 2px solid #1e944b18;
+        padding: 0.5%;
         overflow: auto;
+        background-color: #3abe6d6b;
       }
 
       .container {
@@ -96,11 +118,12 @@
         <div>
           <p id="catInfoBox"> </p>
         </div>
+        <hr>
         <div id="clanStatus"></div>
       </div>
 <!---------------------------- div right -->
       <div id="right-div">
-        <p id="day"> Day: 0</p>
+        <p id="infos"> Day: 0, Cats: 0, Acton Points: 0</p>
         <br />
         <button class="normButton" onclick="endDay()">End Day</button>
         <br />
@@ -111,7 +134,7 @@
         </form>
       </div>
 <!---------------------------- div bottom -->     
-      <div id="bottom-div">
+      <div id="log-div">
       </div>
 <!------------------------------>  
     </div>
@@ -144,36 +167,67 @@
         "fall",
       ]
 
+      const HERBS = [
+      "Catmint",
+      "Burdock root",
+      "Chervil",
+      "Borage",
+      "Tansy",
+      "Feverfew",
+      "Marigold",
+      "Poppy seeds",
+      "Yarrow",
+      "Juniper berries",
+      ]
+
       let allCats = [];
       let days = 0;
       let allClanActions = {};
 
       let clan = {
         usableActionPoints : 0,
-        maxPrey: 20,
+        maxPrey: 40,
         prey: 0,
-        maxHerbs: 10,
+        maxHerbs: 40,
         herbs:0,
       }
 
       // ------------------------ ''action functions'' ----------------------------------------- //
 
       function execute_huntingPatrol(a){
-        let huntedPrey = getRandomNumber(10);
+        let b = getRandomNumber(allCats.length + 1);
+        let c = getRandomNumber(allCats.length + 1);
+        let message = ";"
+
+        console.log(b + ";" + c)
+        let huntedPrey = b + c;
         clan.prey += huntedPrey;
         //if the storage isn't big enought, just "delete" the overflow
         if(clan.prey > clan.maxPrey) { 
           clan.prey = clan.maxPrey
         }
-        log("Your cats were on a successful hunting patrol!" + "(" + huntedPrey + " pieces of prey)")
-      }
 
-      function execute_borderPatrol(a){
-        log("Your cats were on a successful border patrol!")
+        if(huntedPrey >= allCats.length){
+          message = "Your cats were on a successful hunting patrol.";
+        }else{
+          message = "Your huntingpatrol was not that successful.";
+        }
+
+        log(message + "(" + huntedPrey + " pieces of prey)")
       }
 
       function execute_herbPatrol(a){
-        log("Your medecine cat found some herbs!")
+        let foundHerbs = getRandomNumber(allCats.length);
+        let herbs = "";
+        for(i=0; i< foundHerbs; i++){
+          herbs += getRandomElement(HE
+        }
+        log("Your medecine cat found some herbs (" + herbs + ")");
+      }
+
+
+      function execute_borderPatrol(a){
+        log("Your cats were on a successful border patrol!")
       }
       
       // ------------------------ ''create functions'' ----------------------------------------- //
@@ -213,8 +267,10 @@
 
       function createGame() {
         log("Your History Log:");
-        clan.prey = clan.maxPrey;
-        clan.herbs = clan.maxHerbs;
+        clan.maxPrey = allCats.length*8
+        clan.maxHerbs = allCats.length*4
+        clan.prey = clan.maxPrey/2 + clan.maxPrey/2/2;
+        clan.herbs = clan.maxHerbs/2;
         updateClanStatus();
         // I do cat buttons in createCat();
         // for (i = 0; i < allCats.length; i++) {
@@ -272,19 +328,35 @@
       // ------------------------ '' Functions '' ----------------------------------------- //
 
       function log(text) {
-        let div = document.getElementById("bottom-div");
+        let div = document.getElementById("log-div");
         div.innerHTML = div.innerHTML + "<br/>" + text;
         div.scrollTop = div.scrollHeight;
       }
       
       function updateClanStatus() {
+        clan.usableActionPoints = allCats.length*2;
+
         let div = document.getElementById("clanStatus");
 
         //write down all clan stats  --> (set in endDay())
-        div.innerHTML = "Prey: " + clan.prey + "/" + clan.maxPrey
+        let prey = "Prey: " + clan.prey + "/" + clan.maxPrey;
+        let herbs = "Herbs: " + clan.herbs + "/" + clan.maxHerbs; 
+        div.innerHTML = prey + " ; " + herbs
+
+        //count days up and update basic infos (day, cats, action points)
+        days++;
+        let p = document.getElementById("infos")
+        p.innerHTML = "Day: " + days + ", Cats: " + allCats.length + ", Action Points: " + clan.usableActionPoints
       }
 
-
+      function executeActions() {
+        let checkedOptions = getChecked("clanAction");
+        for(i=0; i<checkedOptions.length; i++){ 
+          let a = allClanActions[checkedOptions[i]];
+          a.execute(a);
+        }
+      }
+      
       function computeActionPoints(){
         let usedP = 0;
         let checkedOptions = getChecked("clanAction");
@@ -304,8 +376,12 @@
       }
 
       function computeNextDay() {
+
         //update all clan stats
          clan.prey -= allCats.length;
+
+         //execute the functions of the actions
+        executeActions();
 
         //update cats
          for(let i = 0; i < allCats.length; i++) {
@@ -325,23 +401,19 @@
       function endDay() {
         clan.usableActionPoints = allCats.length*2;
 
-        //computes the action points with the current selection and then returns if it works or not
+      //computes the action points with the current selection and then returns if it works or not
         if (!computeActionPoints()) {
           log("!!! you have not enought action points to do all the selected options! You have " + clan.usableActionPoints + " actionpoints to use. !!!");
           return;
         }
 
-        log("---------------------------------------")
-        
+        log("------------------ Day " + days + " ---------------------")
+
+      //upd. clan stats and cats  
         computeNextDay();
       
-//new function with a.execute(a), to call the action functions!!!!!!!!!!!!!
-        
       
-      //count days up
-        days++;
-        let p = document.getElementById("day")
-        p.innerHTML = "Day: " + days
+        
         
       //unselect all options
         let checkboxes = document.getElementsByName("clanAction");
@@ -352,12 +424,6 @@
       //clear cat info box
         let p2 = document.getElementById("catInfoBox");
         p2.innerHTML ="";
-        
-      
-      
-      
-
-
       }
       
       function getRandomElement(array){
