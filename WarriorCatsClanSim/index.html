@@ -5,8 +5,9 @@
     <meta charset="utf-8" />
     <style>
 
-      body {
+      body   {
         background-color: #c2f1c6;
+        padding: 1%;
       }
 
       hr {
@@ -94,7 +95,7 @@
         bottom: 0;
         width: 65%;
         height: 20%;
-        border: 2px solid #1e944b18;
+        border: 20px solid #c2f1c6;
         padding: 0.5%;
         overflow: auto;
         background-color: #3abe6d6b;
@@ -220,7 +221,11 @@
         let foundHerbs = getRandomNumber(allCats.length);
         let herbs = "";
         for(i=0; i< foundHerbs; i++){
-          herbs += getRandomElement(HE
+          herbs += getRandomElement(HERBS) + ", ";
+        }
+        clan.herbs += foundHerbs;
+        if(clan.herbs > clan.maxHerbs) { 
+          clan.herbs = clan.maxHerbs
         }
         log("Your medecine cat found some herbs (" + herbs + ")");
       }
@@ -233,8 +238,14 @@
       // ------------------------ ''create functions'' ----------------------------------------- //
 
       function createClan() { // inizialisiere Game
-        for (i = 0; i < 5; i++) {
-          allCats.push(createCat());
+        allCats.push(createCat(CAT_RANKS.LEADER));
+        allCats.push(createCat(CAT_RANKS.DEPUTY));
+        allCats.push(createCat(CAT_RANKS.MEDECINE_CAT));
+        for (i = 0; i < 2; i++) {
+          allCats.push(createCat(CAT_RANKS.WARRIOR));
+        }
+        for (i = 0; i < 2; i++) {
+          allCats.push(createCat(CAT_RANKS.APPRENTICE));
         }
         createClanAction("huntingPatrol", "Hunting Patrol", 1, execute_huntingPatrol);
         createClanAction("borderPatrol", "Border Patrol", 2, execute_borderPatrol);
@@ -243,7 +254,17 @@
         return allCats;
       }
       
-      function createCat() {
+      function createCat(iRank) {
+        function setProperties(age, hl, fl, ml, prä, suf){
+          cat.daysOld = age;
+          cat.huntingLevel = hl;
+          cat.fightingLevel = fl;
+          cat.medLevel = ml;
+          cat.präfix = prä;
+          cat.suffix = suf;
+        }
+
+        //create cat
         let cat = {
           präfix: "präfix",
           suffix: "suffix",
@@ -251,17 +272,32 @@
           daysOld: 0, // age in days
           rank: "no rank",
           catButton: null,
+          huntingLevel: 0,
+          fightingLevel: 0,
+          medLevel: 0,
         };
-        
-        cat.daysOld = getRandomNumber(1000);
-        cat.präfix = getRandomElement(CAT_PRAEFIX);
-        cat.suffix = getRandomElement(CAT_SUFFIX); 
+
+        //set level, age and rank depending on the iRank
+          // Parameters: setProperties(age, hl, fl, ml, prä, suf)
+        if(iRank == CAT_RANKS.WARRIOR || iRank == CAT_RANKS.DEPUTY){ //warrior or dep
+          setProperties(getRandomMinMax(12*30, 1000), 5, 5, 0, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
+        } else if(iRank == CAT_RANKS.LEADER){ //lead
+          setProperties(getRandomMinMax(30*30, 1000), 5, 5, 0, getRandomElement(CAT_PRAEFIX), "star")
+        } else if(iRank == CAT_RANKS.APPRENTICE){ //app
+          setProperties(getRandomMinMax(6*30, 11*30), 1, 1, 0, getRandomElement(CAT_PRAEFIX), "paw")
+        } else if(iRank == CAT_RANKS.KIT){ //kit
+          setProperties(getRandomMinMax(1*30, 5*30), 0, 0, 0, getRandomElement(CAT_PRAEFIX), "kit")
+        } else if(iRank == CAT_RANKS.MEDECINE_CAT){ //med
+          setProperties(getRandomMinMax(12*30, 1000), 0, 0, 5, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
+        }
+        cat.rank = iRank //set rank to iRank
 
         cat.getName = function () {
           return this.präfix + this.suffix ;
         };
+
         createCatButton(cat);
-        updateCatRankAndNames(cat);
+        //return the finished objekt :D
         return cat;
       }
 
@@ -372,7 +408,22 @@
       function showCatInfos(cat) {
         console.log(cat.getName());
         let p = document.getElementById("catInfoBox");
-        p.innerHTML = cat.getName() + "<br/>" + computeMoons(cat.daysOld) + " moons" + "<br/> "+ cat.rank;
+
+        let name = cat.getName();
+        let age = computeMoons(cat.daysOld) + "moons";
+        let rank = cat.rank;
+        let hl = cat.huntingLevel;
+        let fl = cat.fightingLevel;
+        let ml = cat.medLevel;
+
+        p.innerHTML = `
+          ${name} <br>
+          ${age} <br>
+          ${rank} <br>
+          Hunting Level: ${hl} <br>
+          Fightign Level: ${fl} <br>
+          Medecine Level: ${ml} <br>
+        `
       }
 
       function computeNextDay() {
@@ -439,6 +490,11 @@
       function getRandomNumber(max){
         let r = Math.random() * max;
         return Math.floor(r);
+      }
+
+      function getRandomMinMax(min, max){
+        let r = getRandomNumber(max - min) + min;
+        return r;
       }
       
       function updateCatRankAndNames(cat){
