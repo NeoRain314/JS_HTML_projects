@@ -141,6 +141,7 @@
     </div>
 
     <script>
+      "use strict";
       // ------------------------ ''variables'' ----------------------------------------- //
       const CAT_RANKS = {
         LEADER: "Leader",
@@ -191,13 +192,16 @@
         prey: 0,
         maxHerbs: 40,
         herbs:0,
+        safety:0,
       }
 
       // ------------------------ ''action functions'' ----------------------------------------- //
 
       function execute_huntingPatrol(a){
-        let b = getRandomNumber(allCats.length + 1);
-        let c = getRandomNumber(allCats.length + 1);
+        let mh = (allCats[0].huntingLevel + allCats.length) / 2 + 1;
+        console.log("maxHunting: " + mh);
+        let b = getRandomNumber(mh);
+        let c = getRandomNumber(mh);
         let message = ";"
 
         console.log(b + ";" + c)
@@ -220,7 +224,7 @@
       function execute_herbPatrol(a){
         let foundHerbs = getRandomNumber(allCats.length);
         let herbs = "";
-        for(i=0; i< foundHerbs; i++){
+        for(let i=0; i< foundHerbs; i++){
           herbs += getRandomElement(HERBS) + ", ";
         }
         clan.herbs += foundHerbs;
@@ -234,6 +238,16 @@
       function execute_borderPatrol(a){
         log("Your cats were on a successful border patrol!")
       }
+
+      function execute_trainHuntingWarriors(a) {
+        for(let i = 0; i < allCats.length; i++) {
+          let cat = allCats[i];
+          if(cat.rank == CAT_RANKS.LEADER || cat.rank == CAT_RANKS.DEPUTY || cat.rank == CAT_RANKS.WARRIOR){
+            cat.huntingLevel ++
+          }
+        }
+        log("your warriors got trained")
+      }
       
       // ------------------------ ''create functions'' ----------------------------------------- //
 
@@ -241,15 +255,17 @@
         allCats.push(createCat(CAT_RANKS.LEADER));
         allCats.push(createCat(CAT_RANKS.DEPUTY));
         allCats.push(createCat(CAT_RANKS.MEDECINE_CAT));
-        for (i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
           allCats.push(createCat(CAT_RANKS.WARRIOR));
         }
-        for (i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
           allCats.push(createCat(CAT_RANKS.APPRENTICE));
         }
         createClanAction("huntingPatrol", "Hunting Patrol", 1, execute_huntingPatrol);
         createClanAction("borderPatrol", "Border Patrol", 2, execute_borderPatrol);
         createClanAction("herbPatrol", "Herb Patrol", 3, execute_herbPatrol);
+
+        createClanAction("trainHuntingWarriors", "Train Hunting (Warriors)", 5, execute_trainHuntingWarriors);
         console.log(allClanActions);
         return allCats;
       }
@@ -387,7 +403,7 @@
 
       function executeActions() {
         let checkedOptions = getChecked("clanAction");
-        for(i=0; i<checkedOptions.length; i++){ 
+        for(let i=0; i<checkedOptions.length; i++){ 
           let a = allClanActions[checkedOptions[i]];
           a.execute(a);
         }
@@ -396,7 +412,7 @@
       function computeActionPoints(){
         let usedP = 0;
         let checkedOptions = getChecked("clanAction");
-        for(i=0; i<checkedOptions.length; i++){
+        for(let i=0; i<checkedOptions.length; i++){
           let a = allClanActions[checkedOptions[i]];
           usedP += a.turnCosts;
         }
@@ -547,8 +563,20 @@
 
       console.log(createClan());
       createGame();
+
     </script>
   </body>
 </html>
 
 
+<!-- 
+  
+  
+  for(let i = 0; i < allCats.length; i++) {
+    let cat = allCats[i];
+  } 
+
+
+-->
+          
+        
