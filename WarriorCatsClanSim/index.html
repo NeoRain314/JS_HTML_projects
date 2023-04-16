@@ -234,11 +234,12 @@
         }
         log("Your medecine cat found some herbs (" + herbs + ")");
         */
-
+        let med = null;
         for(let i = 0; i < allCats.length; i++) {
           let cat = allCats[i];
-          if (cat.rank == CAT_RANKS[MEDECINE_CAT]){
-            let med = cat;
+          if (cat.rank == CAT_RANKS.MEDECINE_CAT){
+            med = cat;
+            break;
           }
         } 
 
@@ -249,8 +250,20 @@
         }else if(herbCount == 1) {
           message = "Your Medecine Cat found some " + getRandomElement(HERBS);
         }else {
-          message = "Your Medecine Cat found some ";  //count as much herbs as much med found
+          let foundHerbs = ""
+          for(let i = 0; i < herbCount; i++){
+            if(i == 0){
+              foundHerbs += " " + getRandomElement(HERBS);
+            } else if(i == herbCount -1){
+              foundHerbs += " and " + getRandomElement(HERBS);
+            } else {
+              foundHerbs += ", " + getRandomElement(HERBS);
+            }
+          }
+          message = "Your Medecine Cat found some " + foundHerbs;  //count as much herbs as much med found
         }
+
+        log(message);
       }
 
 
