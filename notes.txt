@@ -11,5 +11,5 @@ git add dateiname.blub
 
 >>> ToDo <<<
 
-- patrol success depends on the number of cats and their level
+- herb cound med can find depends on med level; 
 ------------------------------------------------------------------------------------------------------------
