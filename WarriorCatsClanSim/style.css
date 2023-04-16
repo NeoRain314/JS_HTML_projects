@@ -1,0 +1,99 @@
+body {
+    background-color: #c2f1c6;
+    padding: 1%;
+}
+
+hr {
+    color: #ccc;
+    height: 1px;
+    border: none;
+    background-color: #ccc;
+    margin: 20px 0;
+}
+
+.normButton {
+    display: inline-block;
+    border: 2px solid #1e944b;
+    border-radius: 4px;
+    background-color: #a2e0a7;
+    color: #1e944b;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.normButton:hover {
+    background-color: #81b385;
+    cursor: pointer;
+}
+
+.catButtons {
+    display: inline-block;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #4c9ef1;
+    background-image: linear-gradient(to bottom, #5fb881, #1e944b);
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.catButtons:hover {
+    transform: translateY(5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.catButtons:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(27, 77, 31, 0.4);
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    color: #1e944b;
+    text-shadow: 3px 3px 0 rgba(133, 201, 139, 0.5);
+}
+
+#left-div {
+    float: left;
+    width: 65%;
+
+    background-color: #5fb88144;
+    border: 2px solid #1e944b18;
+    padding: 0.5%;
+}
+
+#right-div {
+    float: right;
+    width: 30%;
+    border: 2px solid #1e944b18;
+
+    padding: 0.5%;
+}
+
+#log-div {
+    position: absolute;
+    bottom: 0;
+    width: 65%;
+    height: 20%;
+    border: 20px solid #c2f1c6;
+    padding: 0.5%;
+    overflow: auto;
+    background-color: #3abe6d6b;
+}
+
+.container {
+    overflow: hidden;
+}
