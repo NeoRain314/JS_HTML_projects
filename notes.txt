@@ -11,5 +11,5 @@ git add dateiname.blub
 
 >>> ToDo <<<
 
-- herb cound med can find depends on med level; 
+- 
 ------------------------------------------------------------------------------------------------------------

@@ -160,6 +160,7 @@ function createCat(iRank) {
         cat.medLevel = ml;
         cat.präfix = prä;
         cat.suffix = suf;
+        cat.finalSuffix = suf;
     }
 
     //create cat
@@ -180,21 +181,23 @@ function createCat(iRank) {
     if (iRank == CAT_RANKS.WARRIOR || iRank == CAT_RANKS.DEPUTY) { //warrior or dep
         setProperties(getRandomMinMax(12 * 30, 1000), 5, 5, 0, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
     } else if (iRank == CAT_RANKS.LEADER) { //lead
-        setProperties(getRandomMinMax(30 * 30, 1000), 5, 5, 0, getRandomElement(CAT_PRAEFIX), "star")
+        setProperties(getRandomMinMax(30 * 30, 1000), 5, 5, 0, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
     } else if (iRank == CAT_RANKS.APPRENTICE) { //app
-        setProperties(getRandomMinMax(6 * 30, 11 * 30), 1, 1, 0, getRandomElement(CAT_PRAEFIX), "paw")
+        setProperties(getRandomMinMax(6 * 30, 11 * 30), 1, 1, 0, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
     } else if (iRank == CAT_RANKS.KIT) { //kit
-        setProperties(getRandomMinMax(1 * 30, 5 * 30), 0, 0, 0, getRandomElement(CAT_PRAEFIX), "kit")
+        setProperties(getRandomMinMax(1 * 30, 5 * 30), 0, 0, 0, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
     } else if (iRank == CAT_RANKS.MEDECINE_CAT) { //med
         setProperties(getRandomMinMax(12 * 30, 1000), 0, 0, 5, getRandomElement(CAT_PRAEFIX), getRandomElement(CAT_SUFFIX))
     }
     cat.rank = iRank //set rank to iRank
+    
 
     cat.getName = function () {
         return this.präfix + this.suffix;
     };
 
     createCatButton(cat);
+    updateCatRankAndNames(cat);
     //return the finished objekt :D
     return cat;
 }
@@ -418,7 +421,7 @@ function updateCatRankAndNames(cat) {
     } else if (cat.rank == CAT_RANKS.LEADER) {
         cat.suffix = "star";
     } else {
-        cat.suffix = getRandomElement(CAT_SUFFIX);
+        cat.suffix = cat.finalSuffix;
     }
 
     //update cat button
