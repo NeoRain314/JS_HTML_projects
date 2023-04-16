@@ -222,6 +222,7 @@
       }
 
       function execute_herbPatrol(a){
+        /*
         let foundHerbs = getRandomNumber(allCats.length);
         let herbs = "";
         for(let i=0; i< foundHerbs; i++){
@@ -232,6 +233,24 @@
           clan.herbs = clan.maxHerbs
         }
         log("Your medecine cat found some herbs (" + herbs + ")");
+        */
+
+        for(let i = 0; i < allCats.length; i++) {
+          let cat = allCats[i];
+          if (cat.rank == CAT_RANKS[MEDECINE_CAT]){
+            let med = cat;
+          }
+        } 
+
+        let herbCount = getRandomNumber(med.medLevel);
+        let message = "";
+        if(herbCount == 0){
+          message = "Your medecine Cat couldn't find any herbs.";
+        }else if(herbCount == 1) {
+          message = "Your Medecine Cat found some " + getRandomElement(HERBS);
+        }else {
+          message = "Your Medecine Cat found some ";  //count as much herbs as much med found
+        }
       }
 
 
