@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> test </title>
+    <meta charset="utf-8" />
+    <style>
+        .image-container {
+            position: relative;
+        }
+
+        .layer1, .layer2, .layer3, .layer4 { 
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .layer1 {
+            z-index: 1;
+        }
+
+        .layer2 {
+            z-index: 2;
+        }
+
+        .layer3 {
+            z-index: 3;
+        }
+
+        .layer4 {
+            z-index: 4;
+        }
+
+    </style>
+  </head>
+
+  <body>
+    <div class="image-container">
+        <img src="./images/fur_1.png" class="layer1">
+        <img src="./images/pattern_1.png" class="layer2">
+        <img src="./images/eyes_1.png" class="layer3">
+        <img src="./images/outlines.png" class="layer4">
+    </div>
+    <script></script>
+  </body>
+</html>
+
+<!--
+
+-->
