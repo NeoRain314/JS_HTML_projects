@@ -56,6 +56,7 @@ function execute_huntingPatrol(a) {
 
     console.log(b + ";" + c)
     let huntedPrey = b + c;
+
     clan.prey += huntedPrey;
     //if the storage isn't big enought, just "delete" the overflow
     if (clan.prey > clan.maxPrey) {
@@ -111,6 +112,10 @@ function execute_herbPatrol(a) {
             }
         }
         message = "Your Medecine Cat found some " + foundHerbs;  //count as much herbs as much med found
+    }
+    clan.herbs += herbCount;
+    if(clan.herbs > clan.maxHerbs){
+        clan.herbs = clan.maxHerbs;
     }
 
     log(message);
@@ -216,15 +221,50 @@ function createGame() {
 }
 
 function createCatButton(cat) {
-    var div = document.getElementById("catButtons");
-    var button = document.createElement("button"); // create button
-    button.textContent = cat.getName(); // text on buttone = cat name
-    //button.id = "my-button";
+//create elements(button, divs, br)
+    let div = document.getElementById("catButtons");
+    let imgDiv = document.createElement("div"); // create the div for the img and the button
+    let buttonDiv = document.createElement("div");
+    let button = document.createElement("button"); // create button
+    let br = document.createElement("br");
+
+//prepare the imgs
+    let fur_img = document.createElement("img");
+    let pattern_img = document.createElement("img");
+    let eyes_img = document.createElement("img");
+    let outlines_img = document.createElement("img");
+    
+    fur_img.src = "./images/fur_1.png";
+    pattern_img.src = "./images/pattern_1.png";
+    eyes_img.src = "./images/eyes_1.png";
+    outlines_img.src = "./images/outlines.png";
+
+    fur_img.classList.add('layer1');
+    pattern_img.classList.add('layer2');
+    eyes_img.classList.add('layer3');
+    outlines_img.classList.add('layer4');
+
+//prepare imgDiv
+    imgDiv.classList.add('image-container');
+
+//add imgs to imgDiv
+    imgDiv.appendChild(fur_img);
+    imgDiv.appendChild(pattern_img);
+    imgDiv.appendChild(eyes_img);
+    imgDiv.appendChild(outlines_img);
+
+//prepare button
+    button.textContent = cat.getName();
     button.className = "catButtons";
     button.onclick = function () {
         showCatInfos(cat);
     };
-    div.appendChild(button);
+
+//build everything together
+    buttonDiv.appendChild(imgDiv);
+    buttonDiv.appendChild(br);
+    buttonDiv.appendChild(button);
+    div.appendChild(buttonDiv);
     cat.catButton = button;
 }
 

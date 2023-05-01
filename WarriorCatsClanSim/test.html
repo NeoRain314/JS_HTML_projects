@@ -6,12 +6,14 @@
     <style>
         .image-container {
             position: relative;
+            height: 100px;
         }
 
         .layer1, .layer2, .layer3, .layer4 { 
             position: absolute;
             top: 0;
             left: 0;
+            width: 100px;
         }
 
         .layer1 {
@@ -30,16 +32,38 @@
             z-index: 4;
         }
 
+        button {
+            display: inline-block;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #4c9ef1;
+    background-image: linear-gradient(to bottom, #5fb881, #1e944b);
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+        }
+
     </style>
   </head>
 
   <body>
-    <div class="image-container">
-        <img src="./images/fur_1.png" class="layer1">
-        <img src="./images/pattern_1.png" class="layer2">
-        <img src="./images/eyes_1.png" class="layer3">
-        <img src="./images/outlines.png" class="layer4">
+    <div>
+        <div class="image-container">
+            <img src="./images/fur_1.png" class="layer1">
+            <img src="./images/pattern_1.png" class="layer2">
+            <img src="./images/eyes_1.png" class="layer3">
+            <img src="./images/outlines.png" class="layer4">
+        </div>
+        
+        <button> Ivybranch </button>
     </div>
+    
     <script></script>
   </body>
 </html>

@@ -58,6 +58,7 @@ hr {
     box-shadow: 0 0 0 3px rgba(27, 77, 31, 0.4);
 }
 
+
 h1 {
     font-size: 48px;
     font-weight: bold;
@@ -96,4 +97,35 @@ h1 {
 
 .container {
     overflow: hidden;
+}
+
+
+/* ................... cat images ........................... */
+
+.image-container {
+    position: relative;
+    height: 100px;
+}
+
+.layer1, .layer2, .layer3, .layer4 { 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+}
+
+.layer1 {
+    z-index: 1;
+}
+
+.layer2 {
+    z-index: 2;
+}
+
+.layer3 {
+    z-index: 3;
+}
+
+.layer4 {
+    z-index: 4;
 }
