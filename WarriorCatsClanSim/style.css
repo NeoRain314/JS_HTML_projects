@@ -71,6 +71,7 @@ h1 {
 }
 
 #left-div {
+    position: relative;
     float: left;
     width: 65%;
 
@@ -80,6 +81,7 @@ h1 {
 }
 
 #right-div {
+    position: relative;
     float: right;
     width: 30%;
     border: 2px solid #1e944b18;
@@ -88,10 +90,10 @@ h1 {
 }
 
 #log-div {
-    position: absolute;
+    position: relative;
     bottom: 0;
-    width: 65%;
-    height: 20%;
+    width: 30%;
+    height: 200px;
     border: 20px solid #c2f1c6;
     padding: 0.5%;
     overflow: auto;
@@ -105,9 +107,19 @@ h1 {
 
 /* ................... cat images ........................... */
 
+.tableTDs{
+    width: auto;
+}
+
 .image-container {
     position: relative;
     height: 50px;
+    
+    width: 100px;
+}
+
+.buttonDiv {
+    position: relative;
 }
 
 .layer1, .layer2, .layer3, .layer4 { 

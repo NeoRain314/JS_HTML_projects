@@ -45,6 +45,8 @@ let clan = {
     safety: 0,
 }
 
+let currentTr = 0;
+
 // ------------------------ ''action functions'' ----------------------------------------- //
 
 function execute_huntingPatrol(a) {
@@ -221,12 +223,19 @@ function createGame() {
 }
 
 function createCatButton(cat) {
-//create elements(button, divs, br)
-    let div = document.getElementById("catButtons");
+//create elements(button, divs, br, table elements)
+    let table = document.getElementById("catButtonTable");
     let imgDiv = document.createElement("div"); // create the div for the img and the button
     let buttonDiv = document.createElement("div");
     let button = document.createElement("button"); // create button
     let br = document.createElement("br");
+    let td = document.createElement("td"); //create table data
+
+
+    if(allCats.length%5 == 0){
+        currentTr = document.createElement("tr");
+        table.appendChild(currentTr)
+    }
 
 //prepare the imgs
     let fur_img = document.createElement("img");
@@ -247,6 +256,9 @@ function createCatButton(cat) {
 //prepare imgDiv
     imgDiv.classList.add('image-container');
 
+//prepare Button Div
+    buttonDiv.classList.add('buttonDiv')
+
 //add imgs to imgDiv
     imgDiv.appendChild(fur_img);
     imgDiv.appendChild(pattern_img);
@@ -260,12 +272,19 @@ function createCatButton(cat) {
         showCatInfos(cat);
     };
 
+//prepare table td
+    td.classList.add('tableTDs');
+
 //build everything together
     buttonDiv.appendChild(imgDiv);
     buttonDiv.appendChild(br);
     buttonDiv.appendChild(button);
-    div.appendChild(buttonDiv);
+    td.appendChild(buttonDiv);
+    //div.appendChild(buttonDiv);
     cat.catButton = button;
+    currentTr.appendChild(td)
+    table.appendChild(currentTr);
+    
 }
 
 
