@@ -1,5 +1,12 @@
 "use strict";
 // ------------------------ ''variables'' ----------------------------------------- //
+
+const COUNT_OF_IMAGES = {
+    EYES: 1,
+    FUR: 1,
+    PATTERN: 1,
+}
+
 const CAT_RANKS = {
     LEADER: "Leader",
     DEPUTY: "Deputy",
@@ -49,8 +56,26 @@ let currentTr = 0;
 
 // ------------------------ ''action functions'' ----------------------------------------- //
 
+function getAverangeOfHuntingLevel(){
+    let computedHuntingLevel = 0;
+    let abeledCats = 0;
+    for(let i = 0; i < allCats.length; i++){
+        let cat = allCats[i];
+        if(cat.rank == CAT_RANKS.WARRIOR || cat.rank == CAT_RANKS.APPRENTICE){
+            computedHuntingLevel += cat.huntingLevel;
+            abeledCats++;
+        }
+    }
+    return computedHuntingLevel/abeledCats;
+}
+
 function execute_huntingPatrol(a) {
-    let mh = (allCats[0].huntingLevel + allCats.length) / 2 + 1;
+    //compute average of hunting level (warriors + apprentices)
+    
+
+    let huntingAverage = getAverangeOfHuntingLevel();
+
+    let mh = (huntingAverage + allCats.length) / 2 + 1; //
     console.log("maxHunting: " + mh);
     let b = getRandomNumber(mh);
     let c = getRandomNumber(mh);
@@ -135,7 +160,48 @@ function execute_trainHuntingWarriors(a) {
             cat.huntingLevel++
         }
     }
-    log("your warriors got trained")
+    log("your warriors got trained in hunting");
+    console.log('new average hunting level: ' + getAverangeOfHuntingLevel());
+}
+
+function execute_trainFightingWarriors(a) {
+    for (let i = 0; i < allCats.length; i++) {
+        let cat = allCats[i];
+        if (cat.rank == CAT_RANKS.LEADER || cat.rank == CAT_RANKS.DEPUTY || cat.rank == CAT_RANKS.WARRIOR) {
+            cat.fightingLevel++
+        }
+    }
+    log("your warriors got trained in fighthing");
+}
+
+function execute_trainHuntingApprentices(a) {
+    if(getCatsByRank(CAT_RANKS.APPRENTICE).length == 0){
+        log("Your clan does not have any Apprentices to train");
+        return
+    }
+
+    for (let i = 0; i < allCats.length; i++) {
+        let cat = allCats[i];
+        if (cat.rank == CAT_RANKS.APPRENTICE) {
+            cat.hu++
+        }
+    }
+    log("your apprentices got trained in fighthing");
+}
+
+function execute_trainFightingApprentices(a) {
+    if(getCatsByRank(CAT_RANKS.APPRENTICE).length == 0){
+        log("Your clan does not have any Apprentices to train");
+        return;
+    }
+
+    for (let i = 0; i < allCats.length; i++) {
+        let cat = allCats[i];
+        if (cat.rank == CAT_RANKS.APPRENTICE) {
+            cat.fightingLevel++
+        }
+    }
+    log("your warriors got trained in fighthing");
 }
 
 // ------------------------ ''create functions'' ----------------------------------------- //
@@ -150,11 +216,19 @@ function createClan() { // inizialisiere Game
     for (let i = 0; i < 2; i++) {
         allCats.push(createCat(CAT_RANKS.APPRENTICE));
     }
-    createClanAction("huntingPatrol", "Hunting Patrol", 1, execute_huntingPatrol);
-    createClanAction("borderPatrol", "Border Patrol", 2, execute_borderPatrol);
+
+//  createClanAction(checkboxValue, checkboxText, turnCosts, actionFunction);
+
+    createClanAction("huntingPatrol", "Hunting Patrol", 3, execute_huntingPatrol);
+    createClanAction("borderPatrol", "Border Patrol", 3, execute_borderPatrol);
     createClanAction("herbPatrol", "Herb Patrol", 3, execute_herbPatrol);
 
     createClanAction("trainHuntingWarriors", "Train Hunting (Warriors)", 5, execute_trainHuntingWarriors);
+    createClanAction("trainFightingWarriors", "Train Fighting (Warriors)", 5, execute_trainFightingWarriors);
+
+    createClanAction("trainHuntingApprentices", "Train Hunting (Apprentices)", 6, execute_trainHuntingApprentices);
+    createClanAction("trainFightingApprentices", "Train Fighting (Apprentices)", 6, execute_trainFightingApprentices);
+
     console.log(allClanActions);
     return allCats;
 }
@@ -243,9 +317,9 @@ function createCatButton(cat) {
     let eyes_img = document.createElement("img");
     let outlines_img = document.createElement("img");
     
-    fur_img.src = "./images/fur_1.png";
-    pattern_img.src = "./images/pattern_1.png";
-    eyes_img.src = "./images/eyes_1.png";
+    fur_img.src =  './images/fur_' + getRandomMinMax(1, COUNT_OF_IMAGES.FUR) + '.png',
+    pattern_img.src = './images/pattern_' + getRandomMinMax(1, COUNT_OF_IMAGES.PATTERN) + '.png';
+    eyes_img.src = './images/eyes_' + getRandomMinMax(1, COUNT_OF_IMAGES.EYES) + '.png';
     outlines_img.src = "./images/outlines.png";
 
     fur_img.classList.add('layer1');
@@ -418,6 +492,7 @@ function endDay() {
         return;
     }
 
+    log("<br>")
     log("------------------ Day " + days + " ---------------------")
 
     //upd. clan stats and cats  
@@ -501,6 +576,18 @@ function getChecked(name) { //gets the checked boxes of one name
     }
 
     return checkedOptions;
+}
+
+
+function  getCatsByRank(rank) {
+    let catsWithRank = [];
+    for (let i = 0; i < allCats.length; i++) {
+        let cat = allCats[i];
+        if (cat.rank == rank) {
+            catsWithRank.push(cat)
+        }
+    }
+    return catsWithRank
 }
 
 // ------------------------ '' Game '' ----------------------------------------- //
