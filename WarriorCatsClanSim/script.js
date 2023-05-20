@@ -75,13 +75,13 @@ function execute_huntingPatrol(a) {
 
     let huntingAverage = getAverangeOfHuntingLevel();
 
-    let mh = (huntingAverage + allCats.length) / 2 + 1; //
+    let mh =  (huntingAverage/2)*(allCats.length - 1);   //(huntingAverage + allCats.length) / 2 + 1; //
     console.log("maxHunting: " + mh);
     let b = getRandomNumber(mh);
     let c = getRandomNumber(mh);
     let message = ";"
 
-    console.log(b + ";" + c)
+    console.log("hunted Prey: " + b + ";" + c)
     let huntedPrey = b + c;
 
     clan.prey += huntedPrey;
@@ -176,14 +176,14 @@ function execute_trainFightingWarriors(a) {
 
 function execute_trainHuntingApprentices(a) {
     if(getCatsByRank(CAT_RANKS.APPRENTICE).length == 0){
-        log("Your clan does not have any Apprentices to train");
+        log("Your clan does not have any Apprentices to train", "warning");
         return
     }
 
     for (let i = 0; i < allCats.length; i++) {
         let cat = allCats[i];
         if (cat.rank == CAT_RANKS.APPRENTICE) {
-            cat.hu++
+            cat.huntingLevel++
         }
     }
     log("your apprentices got trained in fighthing");
@@ -191,7 +191,7 @@ function execute_trainHuntingApprentices(a) {
 
 function execute_trainFightingApprentices(a) {
     if(getCatsByRank(CAT_RANKS.APPRENTICE).length == 0){
-        log("Your clan does not have any Apprentices to train");
+        log("Your clan does not have any Apprentices to train", "warning");
         return;
     }
 
@@ -201,7 +201,7 @@ function execute_trainFightingApprentices(a) {
             cat.fightingLevel++
         }
     }
-    log("your warriors got trained in fighthing");
+    log("your apprentices got trained in fighthing");
 }
 
 // ------------------------ ''create functions'' ----------------------------------------- //
@@ -284,7 +284,7 @@ function createCat(iRank) {
 }
 
 function createGame() {
-    log("Your History Log:");
+    log("Your History Log:", "heading");
     clan.maxPrey = allCats.length * 8
     clan.maxHerbs = allCats.length * 4
     clan.prey = clan.maxPrey / 2 + clan.maxPrey / 2 / 2;
@@ -397,9 +397,9 @@ function createClanAction(checkboxValue, checkboxText, turnCosts, actionFunction
 
 // ------------------------ '' Functions '' ----------------------------------------- //
 
-function log(text) {
+function log(text, style="") {
     let div = document.getElementById("log-div");
-    div.innerHTML = div.innerHTML + "<br/>" + text;
+    div.innerHTML = div.innerHTML + "<div class=\"" + style + "\">" + text + "</div>"; 
     div.scrollTop = div.scrollHeight;
 }
 
@@ -488,12 +488,12 @@ function endDay() {
 
     //computes the action points with the current selection and then returns if it works or not
     if (!computeActionPoints()) {
-        log("!!! you have not enought action points to do all the selected options! You have " + clan.usableActionPoints + " actionpoints to use. !!!");
+        log("!!! you have not enought action points to do all the selected options! You have " + clan.usableActionPoints + " actionpoints to use. !!!", "warning");
         return;
     }
 
     log("<br>")
-    log("------------------ Day " + days + " ---------------------")
+    log("------------------ Day " + days + " ---------------------", "heading")
 
     //upd. clan stats and cats  
     computeNextDay();

@@ -104,6 +104,16 @@ h1 {
     overflow: hidden;
 }
 
+/* ................... log classes ........................... */
+
+.warning {
+    color: #991515;
+}
+
+.heading {
+    font-weight: bold;
+}
+
 
 /* ................... cat images ........................... */
 
